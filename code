@@ -1,4 +1,11 @@
-
+#include <stdio.h>
+#include<stdlib.h>
+int read_matrix(int row, int column, int *a[row]);
+void print_sparse(int nonZeroElement,int b[nonZeroElement][3]);
+void create_sparse(int nonZeroElement, int row, int column, int *a[row], int b[nonZeroElement][3]);
+void printOriginalMatrix(int nonZeroElement,int b[][3]);
+void transpose(int nonZeroElement,int b[][3]);
+void swap(int *x, int *y);
 int main(){
     int row,column;
     printf("\nEnter the size of matrix (rows, columns): ");
