@@ -1,0 +1,113 @@
+
+int main(){
+    int row,column;
+    printf("\nEnter the size of matrix (rows, columns): ");
+    scanf("%d %d", &row, &column);
+
+    int *a[row];
+    for(int i=0;i<row;i++) a[i] = (int*)malloc(sizeof(int)*column);
+
+    int nonZeroElement = read_matrix(row,column,a);
+    if(nonZeroElement < row*column/3){
+        nonZeroElement = nonZeroElement+1;
+        int b[nonZeroElement][3];
+
+        create_sparse(nonZeroElement,row,column,a,b);
+
+
+        print_sparse(nonZeroElement,b);
+
+        printf("The original Matrix is\n");
+        printOriginalMatrix(nonZeroElement,b);
+        for(int i=0;i<row;i++)
+            free(a[i]);
+
+        transpose(nonZeroElement,b);
+    }else printf("Cannot perforem\n");
+    return 0;
+}
+
+int read_matrix(int row, int column,int *a[row]){
+    int i, j,n=0;
+    printf("\nEnter elements of matrix\n");
+    for (i = 0; i < row; i++)
+    {
+        for (j = 0; j < column; j++)
+        {
+            printf("[%d][%d]: ", i, j);
+            scanf("%d", &a[i][j]);
+            if(a[i][j]) n++;
+        }
+    }
+    return n;
+}
+
+void create_sparse(int nonZeroElement, int row, int column, int *a[row], int b[nonZeroElement][3]){
+    int i, j, k;
+    k = 1;
+    b[0][0] = row;
+    b[0][1] = column;
+    for (i = 0; i < row; i++)
+    {
+        for (j = 0; j < column; j++)
+        {
+            if (a[i][j] != 0)
+            {
+                b[k][0] = i;
+                b[k][1] = j;
+                b[k][2] = a[i][j];
+                k++;
+            }
+        }
+        b[0][2] = k - 1;
+    }
+}
+
+void print_sparse(int nonZeroElement,int b[nonZeroElement][3]){
+    int i, column;
+    column = b[0][2];
+    printf("\nSparse form - list of 3 triples\n\n");
+    for (i = 0; i <= column; i++)
+    {
+        printf("%d\t%d\t%d\n", b[i][0], b[i][1], b[i][2]);
+    }
+}
+
+void printOriginalMatrix(int nonZeroElement,int b[][3]){
+    int k=1;
+    for(int i=0;i<b[0][0];i++){
+        for(int j=0;j<b[0][1];j++){
+            if(i==b[k][0]&&j==b[k][1])printf("%d ",b[k++][2]);
+            else printf("0 ");
+        }
+        printf("\n");
+    }
+}
+
+void transpose(int nonZeroElement,int b[][3]){
+    int c[nonZeroElement][3];
+    for(int i=0;i<nonZeroElement;i++){
+        for(int j=0;j<3;j++){
+            c[i][j] = b[i][j];
+        }
+    }
+
+    for(int i=0;i<nonZeroElement;i++){
+        swap(&c[i][0],&c[i][1]);
+    }
+    printf("----\n");
+   for(int i=0;i<nonZeroElement;i++){
+        for(int j=0;j<3;j++){
+            printf("%d\t",c[i][j]);
+        }
+        printf("\n");
+    }
+
+}
+
+void swap(int *x, int *y){
+    int temp;
+    temp = *x;
+    *x = *y;
+    *y= temp;
+}
